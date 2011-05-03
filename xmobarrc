@@ -1,7 +1,7 @@
-Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
+Config { font = "xft:Inconsolata-10"
        , bgColor = "black"
        , fgColor = "grey"
-       , position = TopW L 100
+       , position = TopW L 85
        , lowerOnStart = True
        , commands = [ Run StdinReader
                     , Run Date "%a %b %_d %l:%M" "date" 10
