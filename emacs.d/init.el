@@ -1,5 +1,11 @@
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
+(setq mac-option-modifier 'none)
+(setq mac-command-modifier 'meta)
+
+;; start in the default directory
+(setq default-directory (concat (getenv "HOME") "/"))
+
 (unless (require 'el-get nil 'noerror)
   (with-current-buffer
       (url-retrieve-synchronously
@@ -15,14 +21,17 @@
        '(ace-jump-mode yaml-mode color-theme color-theme-solarized
 		       markdown-mode htmlize
 		       clojure-mode cider paredit
-		       deft
+		       deft org-mode
 		       multiple-cursors highline smex
-		       zenburn-theme)
+		       zenburn-theme
+		       auto-complete)
 
        (mapcar 'el-get-as-symbol (mapcar 'el-get-source-name el-get-sources))))
 
 (el-get 'sync my-packages)
 
+
+(require 'org-mobile)
 
 ;; decor
 (setq inhibit-startup-screen t)
@@ -43,6 +52,13 @@
   (setq org-default-notes-file destination))
 (global-set-key (kbd "C-c d") 'deft)
 
+
+;; Set to the location of your Org files on your local system
+(setq org-directory "~/Dropbox/notes")
+;; Set to the name of the file where new notes will be stored
+(setq org-mobile-inbox-for-pull "~/Dropbox/notes/inbox.org")
+;; Set to <your Dropbox root directory>/MobileOrg.
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 
 ;; backups
 (setq backup-by-copying t
@@ -71,11 +87,14 @@
 (setq ido-everywhere t)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-
 ;; linum
 ;;(require 'linum)
+
 ;;(global-linum-mode t)
 ;;(setq linum-format "%2d ")
+
+
+
 
 
 ;; multiple cursors
@@ -88,3 +107,47 @@
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+
+
+
+;; clojure
+;; where is lein located? If it's not in a "standard path, add a line like this.
+(add-to-list 'exec-path "/Users/icabre/bin")
+
+
+
+;; Read in PATH from .bash_profile
+(if (not (getenv "TERM_PROGRAM"))
+    (setenv "PATH"
+            (shell-command-to-string "source $HOME/.bash_profile && printf $PATH")))
+
+;; Show parenthesis mode
+(show-paren-mode 1)  
+
+;; rainbow delimiters
+;;(global-rainbow-delimiters-mode)
+
+;; paredit
+(add-hook 'clojure-mode-hook 'paredit-mode)
+(add-hook 'cider-mode-hook 'paredit-mode)
+(global-set-key [f7] 'paredit-mode)
+
+
+
+;; nrepl
+;(add-hook 'cider-repl-mode-hook 'nrepl-turn-on-eldoc-mode)
+;(setq nrepl-popup-stacktraces nil)
+;(add-to-list 'same-window-buffer-names "*nrepl*")
+(add-hook 'cider-mode-hook 'paredit-mode)
+
+;; Auto complete
+(require 'auto-complete-config)
+;(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+(setq ac-delay 0.0)
+;(setq ac-use-quick-help t)
+(setq ac-quick-help-delay 0.0)
+;(setq ac-use-fuzzy 1)
+;(setq ac-auto-start 1)
+;(setq ac-auto-show-menu 1)
+(ac-config-default)
