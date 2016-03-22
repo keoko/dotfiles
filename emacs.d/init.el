@@ -1,153 +1,161 @@
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
+;; disable menu bar, scroll bar and tool bar
+(menu-bar-mode -1)
+(toggle-scroll-bar -1)
+(tool-bar-mode -1)
+
+;; alt/meta key for international keyboards
 (setq mac-option-modifier 'none)
 (setq mac-command-modifier 'meta)
 
-;; start in the default directory
-(setq default-directory (concat (getenv "HOME") "/"))
 
-(unless (require 'el-get nil 'noerror)
-  (with-current-buffer
-      (url-retrieve-synchronously
-       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
-    (goto-char (point-max))
-    (eval-print-last-sexp)))
-
-(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
-; (el-get 'sync)
-
-(setq my-packages
-      (append
-       '(ace-jump-mode yaml-mode color-theme color-theme-solarized
-		       markdown-mode htmlize
-		       clojure-mode cider paredit
-		       deft org-mode
-		       multiple-cursors highline smex
-		       zenburn-theme
-		       auto-complete)
-
-       (mapcar 'el-get-as-symbol (mapcar 'el-get-source-name el-get-sources))))
-
-(el-get 'sync my-packages)
+;;;;
+;; Packages
+;;;;
 
 
-(require 'org-mobile)
+;; Define package repositories
+(require 'package)
+(add-to-list 'package-archives
+             '("gnu" . "http://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives
+             '("tromey" . "http://tromey.com/elpa/") t)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-;; decor
-(setq inhibit-startup-screen t)
-(menu-bar-mode -1)
-(if window-system
-    (tool-bar-mode -1))
-(load-theme 'zenburn t)
-
-
-;; deft
-(setq deft-directory "~/Dropbox/notes")
-(setq deft-extension "org")
-(setq deft-text-mode 'org-mode)
-
-(let ((destination (if (file-exists-p "~/Dropbox")
-                       "~/Dropbox/notes.org"
-                     "~/notes.org")))
-  (setq org-default-notes-file destination))
-(global-set-key (kbd "C-c d") 'deft)
+;; (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+;;                          ("marmalade" . "http://marmalade-repo.org/packages/")
+;;                          ("melpa" . "http://melpa-stable.milkbox.net/packages/")))
 
 
-;; Set to the location of your Org files on your local system
-(setq org-directory "~/Dropbox/notes")
-;; Set to the name of the file where new notes will be stored
-(setq org-mobile-inbox-for-pull "~/Dropbox/notes/inbox.org")
-;; Set to <your Dropbox root directory>/MobileOrg.
-(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+;; Load and activate emacs packages. Do this first so that the
+;; packages are loaded before you start trying to modify them.
+;; This also sets the load path.
+(package-initialize)
 
-;; backups
-(setq backup-by-copying t
-      backup-directory-alist '(("." . "~/.emacs.d/backup"))
-      delete-old-versions t
-      kept-new-versions 128
-      kept-old-versions 128
-      version-control t)
+;; Download the ELPA archive description if needed.
+;; This informs Emacs about the latest versions of all packages, and
+;; makes them available for download.
+(when (not package-archive-contents)
+  (package-refresh-contents))
 
-;; ace-jump-mode
-(require 'ace-jump-mode)
-(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+;; The packages you want installed. You can also install these
+;; manually with M-x package-install
+;; Add in your own as you wish:
+(defvar my-packages
+  '(;; makes handling lisp expressions much, much easier
+    ;; Cheatsheet: http://www.emacswiki.org/emacs/PareditCheatsheet
+    paredit
+
+    ;; key bindings and code colorization for Clojure
+    ;; https://github.com/clojure-emacs/clojure-mode
+    clojure-mode
+
+    ;; extra syntax highlighting for clojure
+    clojure-mode-extra-font-locking
+
+    ;; integration with a Clojure REPL
+    ;; https://github.com/clojure-emacs/cider
+    cider
+
+    ;; allow ido usage in as many contexts as possible. see
+    ;; customizations/navigation.el line 23 for a description
+    ;; of ido
+    ido-ubiquitous
+
+    ;; Enhances M-x to allow easier execution of commands. Provides
+    ;; a filterable list of possible commands in the minibuffer
+    ;; http://www.emacswiki.org/emacs/Smex
+    smex
+
+    ;; project navigation
+    projectile
+
+    ;; colorful parenthesis matching
+    rainbow-delimiters
+
+    ;; edit html tags like sexps
+    tagedit
+
+    ;; edit multiple lines at the same time
+    multiple-cursors
+
+    ;; git integration
+    magit
+
+    ;; mac-key-mode
+    mac-key-mode
+
+    ;; redo needed for mac-key-mode
+    redo+
+    ))
+
+;; On OS X, an Emacs instance started from the graphical user
+;; interface will have a different environment than a shell in a
+;; terminal window, because OS X does not run a shell during the
+;; login. Obviously this will lead to unexpected results when
+;; calling external utilities like make from Emacs.
+;; This library works around this problem by copying important
+;; environment variables from the user's shell.
+;; https://github.com/purcell/exec-path-from-shell
+(if (eq system-type 'darwin)
+    (add-to-list 'my-packages 'exec-path-from-shell))
+
+(dolist (p my-packages)
+  (when (not (package-installed-p p))
+    (package-install p)))
 
 
-;; ido-mode
-(require 'ido)
-(ido-mode t)
-(setq ido-auto-merge-work-directories-length nil
-      ido-create-new-buffer 'always
-      ido-enable-flex-matching t
-      ido-enable-prefix nil
-      ido-handle-duplicate-virtual-buffers 2
-      ido-max-prospects 10
-      ido-use-filename-at-point 'guess
-      ido-use-virtual-buffers t)
-(setq ido-everywhere t)
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;; linum
-;;(require 'linum)
-
-;;(global-linum-mode t)
-;;(setq linum-format "%2d ")
+;; Place downloaded elisp files in ~/.emacs.d/vendor. You'll then be able
+;; to load them.
+;;
+;; For example, if you download yaml-mode.el to ~/.emacs.d/vendor,
+;; then you can add the following code to this file:
+;;
+;; (require 'yaml-mode)
+;; (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+;; 
+;; Adding this code will make Emacs enter yaml mode whenever you open
+;; a .yml file
+(add-to-list 'load-path "~/.emacs.d/vendor")
 
 
+;;;;
+;; Customization
+;;;;
 
+;; Add a directory to our load path so that when you `load` things
+;; below, Emacs knows where to look for the corresponding file.
+(add-to-list 'load-path "~/.emacs.d/customizations")
 
+;; Sets up exec-path-from-shell so that Emacs will use the correct
+;; environment variables
+(load "shell-integration.el")
 
-;; multiple cursors
+;; These customizations make it easier for you to navigate files,
+;; switch buffers, and choose options from the minibuffer.
+(load "navigation.el")
+
+;; These customizations change the way emacs looks and disable/enable
+;; some user interface elements
+(load "ui.el")
+
+;; These customizations make editing a bit nicer.
+(load "editing.el")
+
+;; Hard-to-categorize customizations
+(load "misc.el")
+
+;; For editing lisps
+(load "elisp-editing.el")
+
+;; Langauage-specific
+(load "setup-clojure.el")
+(load "setup-js.el")
+
 (require 'multiple-cursors)
-(global-set-key (kbd "C-c C-s") 'mc/edit-lines)
 
 
-; smex Alt-x improved
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
-
-
-
-;; clojure
-;; where is lein located? If it's not in a "standard path, add a line like this.
-(add-to-list 'exec-path "/Users/icabre/bin")
-
-
-
-;; Read in PATH from .bash_profile
-(if (not (getenv "TERM_PROGRAM"))
-    (setenv "PATH"
-            (shell-command-to-string "source $HOME/.bash_profile && printf $PATH")))
-
-;; Show parenthesis mode
-(show-paren-mode 1)  
-
-;; rainbow delimiters
-;;(global-rainbow-delimiters-mode)
-
-;; paredit
-(add-hook 'clojure-mode-hook 'paredit-mode)
-(add-hook 'cider-mode-hook 'paredit-mode)
-(global-set-key [f7] 'paredit-mode)
-
-
-
-;; nrepl
-;(add-hook 'cider-repl-mode-hook 'nrepl-turn-on-eldoc-mode)
-;(setq nrepl-popup-stacktraces nil)
-;(add-to-list 'same-window-buffer-names "*nrepl*")
-(add-hook 'cider-mode-hook 'paredit-mode)
-
-;; Auto complete
-(require 'auto-complete-config)
-;(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-(setq ac-delay 0.0)
-;(setq ac-use-quick-help t)
-(setq ac-quick-help-delay 0.0)
-;(setq ac-use-fuzzy 1)
-;(setq ac-auto-start 1)
-;(setq ac-auto-show-menu 1)
-(ac-config-default)
+(mac-key-mode 1)
