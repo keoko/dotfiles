@@ -82,6 +82,7 @@
      (define-key cider-mode-map (kbd "C-c u") 'cider-user-ns)))
 
 (defun my-clojure-mode-hook ()
+     (define-key clojure-mode-map (kbd "C-c i") 'imenu)
     (clj-refactor-mode 1)
     (yas-minor-mode 1) ; for adding require/use/import statements
     ;; This choice of keybinding leaves cider-macroexpand-1 unbound
