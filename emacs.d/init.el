@@ -21,9 +21,7 @@
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives
-             '("tromey" . "http://tromey.com/elpa/") t)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+             '("melpa" . "http://melpa.org/packages/") t)
 
 ;; (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 ;;                          ("marmalade" . "http://marmalade-repo.org/packages/")
@@ -85,11 +83,15 @@
     ;; git integration
     magit
 
-    ;; mac-key-mode
+    ;; Mac shortcut binding
     mac-key-mode
-
-    ;; redo needed for mac-key-mode
     redo+
+
+    ;; auto-complete
+    auto-complete
+
+    ;; clojure refactor
+    clj-refactor
     ))
 
 ;; On OS X, an Emacs instance started from the graphical user
@@ -155,7 +157,10 @@
 (load "setup-clojure.el")
 (load "setup-js.el")
 
-(require 'multiple-cursors)
 
-
+;; enable mac mode
+(setq mac-command-modifier 'alt mac-option-modifier 'meta)
 (mac-key-mode 1)
+
+;; enable auto-complete
+(ac-config-default)
