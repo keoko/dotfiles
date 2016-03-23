@@ -92,6 +92,9 @@
 
     ;; clojure refactor
     clj-refactor
+
+    ;; helm
+    helm
     ))
 
 ;; On OS X, an Emacs instance started from the graphical user

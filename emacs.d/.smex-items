@@ -1,13 +1,13 @@
 
 ;; ----- smex-history -----
 (
+ load-file
  eval-last-sexp
  cider-version
  package-list-packages
  package-refresh-contents
  package-menu-refresh
  package-install
- package-menu-mode
 )
 
 ;; ----- smex-data -----
@@ -19,4 +19,5 @@
  (package-menu-mode . 1)
  (package-menu-refresh . 1)
  (package-list-packages . 2)
+ (load-file . 1)
 )
