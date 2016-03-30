@@ -163,7 +163,8 @@
 
 ;; enable mac mode
 (setq mac-command-modifier 'alt 
-      mac-option-modifier 'nil)
+      mac-option-modifier 'meta
+      ns-right-alternate-modifier nil)
 (mac-key-mode 1)
 
 ;; enable auto-complete

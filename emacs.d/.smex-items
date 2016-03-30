@@ -5,9 +5,9 @@
  clj-refactor-mode
  cider-jack-in
  rename-file
- cider-drink-a-sip
- cider-close-ancillary-buffers
  eval-last-sexp
+ package-refresh-contents
+ package-list-packages
 )
 
 ;; ----- smex-data -----

@@ -1,5 +1,7 @@
 ;;; -*- coding: utf-8 -*-
-(("/Users/icabrebarrera/dev/clojure/sisyphus/test/sisyphus/endpoint/config_test.clj" . 304)
+(("/Users/icabrebarrera/dev/clojure/sisyphus/src/sisyphus/component/data_store.clj" . 5023)
+ ("/Users/icabrebarrera/dev/dotfiles/emacs.d/init.el" . 4624)
+ ("/Users/icabrebarrera/dev/clojure/sisyphus/test/sisyphus/endpoint/config_test.clj" . 304)
  ("/Users/icabrebarrera/dev/dotfiles/emacs.d/customizations/setup-clojure.el" . 921)
  ("/Users/icabrebarrera/dev/clojure/sisyphus/src/sisyphus/schema.clj" . 126)
  ("/Users/icabrebarrera/dev/clojure/playsync/project.clj" . 313)
@@ -11,8 +13,6 @@
  ("/Users/icabrebarrera/Dropbox/notes/configuration-server.org" . 37)
  ("/Users/icabrebarrera/Dropbox/notes/configuration_system.org" . 6195)
  ("/Users/icabrebarrera/dev/clojure/sisyphus/README.md" . 462)
- ("/Users/icabrebarrera/dev/clojure/sisyphus/src/sisyphus/component/data_store.clj" . 5166)
- ("/Users/icabrebarrera/dev/dotfiles/emacs.d/init.el" . 4584)
  ("/Users/icabrebarrera/dev/clojure/old_config/src/io/aviso/config.clj" . 761)
  ("/Users/icabrebarrera/dev/clojure/playsync/src/playsync/core.clj" . 180)
  ("/Users/icabrebarrera/.lein/profiles.clj" . 138)
