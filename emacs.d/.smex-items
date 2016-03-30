@@ -1,23 +1,38 @@
 
 ;; ----- smex-history -----
 (
- load-file
+ cljr-rename-symbol
+ clj-refactor-mode
+ cider-jack-in
+ rename-file
+ cider-drink-a-sip
+ cider-close-ancillary-buffers
  eval-last-sexp
- cider-version
- package-list-packages
- package-refresh-contents
- package-menu-refresh
- package-install
 )
 
 ;; ----- smex-data -----
 (
- (eval-last-sexp . 3)
+ (eval-last-sexp . 9)
  (cider-version . 2)
- (package-refresh-contents . 4)
+ (package-refresh-contents . 5)
  (package-install . 2)
  (package-menu-mode . 1)
  (package-menu-refresh . 1)
- (package-list-packages . 2)
- (load-file . 1)
+ (package-list-packages . 4)
+ (load-file . 2)
+ (helm-M-x . 1)
+ (helm-top . 1)
+ (helm-google-suggest . 2)
+ (cider-jack-in . 24)
+ (nrepl-messages-mode . 1)
+ (package-menu-mark-delete . 2)
+ (cider-refresh . 1)
+ (cider-user-ns . 1)
+ (list-packages . 2)
+ (eval-expression . 1)
+ (cider-drink-a-sip . 6)
+ (cider-close-ancillary-buffers . 1)
+ (rename-file . 1)
+ (clj-refactor-mode . 2)
+ (cljr-rename-symbol . 1)
 )
