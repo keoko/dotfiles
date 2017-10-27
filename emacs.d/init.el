@@ -1,19 +1,33 @@
+;; TODO - helm notes
+;; TODO - theme
+;; TODO - multicursor
+;; TODO - install cider
+;; TODO - install clojurescript
+;; TODO - install clojure
 
 ;; disable menu bar, scroll bar and tool bar
 (menu-bar-mode -1)
 (toggle-scroll-bar -1)
 (tool-bar-mode -1)
 
+;; start server
+(server-start)
+
+;; decrease font
+(global-set-key (kbd "C--") 'text-scale-decrease)
+;; increase font
+(global-set-key (kbd "C-+") 'text-scale-increase)
+
+;; special chars in mac like @
+(setq-default mac-right-option-modifier nil)
 ;; alt/meta key for international keyboards
-(setq mac-option-modifier 'none)
-(setq mac-command-modifier 'meta)
+;;(setq mac-option-modifier 'none)
+;;(setq mac-command-modifier 'meta)
 
 
 ;;;;
 ;; Packages
 ;;;;
-
-
 ;; Define package repositories
 (require 'package)
 (add-to-list 'package-archives
@@ -45,56 +59,58 @@
 (defvar my-packages
   '(;; makes handling lisp expressions much, much easier
     ;; Cheatsheet: http://www.emacswiki.org/emacs/PareditCheatsheet
-    paredit
+    ;; paredit
+
+    cider
 
     ;; key bindings and code colorization for Clojure
     ;; https://github.com/clojure-emacs/clojure-mode
-    clojure-mode
+    ;; clojure-mode
 
     ;; extra syntax highlighting for clojure
-    clojure-mode-extra-font-locking
+    ;; clojure-mode-extra-font-locking
 
     ;; integration with a Clojure REPL
     ;; https://github.com/clojure-emacs/cider
-    cider
+    ;; cider
 
     ;; allow ido usage in as many contexts as possible. see
     ;; customizations/navigation.el line 23 for a description
     ;; of ido
-    ido-ubiquitous
+    ;; ido-ubiquitous
 
     ;; Enhances M-x to allow easier execution of commands. Provides
     ;; a filterable list of possible commands in the minibuffer
     ;; http://www.emacswiki.org/emacs/Smex
-    smex
+    ;; smex
 
     ;; project navigation
-    projectile
+    ;; projectile
 
     ;; colorful parenthesis matching
-    rainbow-delimiters
+    ;; rainbow-delimiters
 
     ;; edit html tags like sexps
-    tagedit
+    ;; tagedit
 
     ;; edit multiple lines at the same time
-    multiple-cursors
+    ;; multiple-cursors
 
     ;; git integration
-    magit
+    ;; magit
 
     ;; Mac shortcut binding
-    mac-key-mode
-    redo+
+    ;; mac-key-mode
+    ;; redo+
 
     ;; auto-complete
-    auto-complete
+    ;; auto-complete
 
     ;; clojure refactor
-    clj-refactor
+    ;; clj-refactor
 
     ;; helm
-    helm
+    ;;helm
     ))
 
 ;; On OS X, an Emacs instance started from the graphical user
@@ -105,8 +121,8 @@
 ;; This library works around this problem by copying important
 ;; environment variables from the user's shell.
 ;; https://github.com/purcell/exec-path-from-shell
-(if (eq system-type 'darwin)
-    (add-to-list 'my-packages 'exec-path-from-shell))
+;;(if (eq system-type 'darwin)
+;;    (add-to-list 'my-packages 'exec-path-from-shell))
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
@@ -127,45 +143,69 @@
 (add-to-list 'load-path "~/.emacs.d/vendor")
 
 
-;;;;
-;; Customization
-;;;;
-
-;; Add a directory to our load path so that when you `load` things
-;; below, Emacs knows where to look for the corresponding file.
-(add-to-list 'load-path "~/.emacs.d/customizations")
-
-;; Sets up exec-path-from-shell so that Emacs will use the correct
-;; environment variables
-(load "shell-integration.el")
-
-;; These customizations make it easier for you to navigate files,
-;; switch buffers, and choose options from the minibuffer.
-(load "navigation.el")
-
-;; These customizations change the way emacs looks and disable/enable
-;; some user interface elements
-(load "ui.el")
-
-;; These customizations make editing a bit nicer.
-(load "editing.el")
-
-;; Hard-to-categorize customizations
-(load "misc.el")
-
-;; For editing lisps
-(load "elisp-editing.el")
-
-;; Langauage-specific
-(load "setup-clojure.el")
-(load "setup-js.el")
-
-
-;; enable mac mode
-(setq mac-command-modifier 'alt 
-      mac-option-modifier 'meta
-      ns-right-alternate-modifier nil)
-(mac-key-mode 1)
-
-;; enable auto-complete
-(ac-config-default)
+;;;;;;
+;;;; Customization
+;;;;;;
+;;
+;;;; Add a directory to our load path so that when you `load` things
+;;;; below, Emacs knows where to look for the corresponding file.
+;;(add-to-list 'load-path "~/.emacs.d/customizations")
+;;
+;;;; Sets up exec-path-from-shell so that Emacs will use the correct
+;;;; environment variables
+;;(load "shell-integration.el")
+;;
+;;;; These customizations make it easier for you to navigate files,
+;;;; switch buffers, and choose options from the minibuffer.
+;;(load "navigation.el")
+;;
+;;;; These customizations change the way emacs looks and disable/enable
+;;;; some user interface elements
+;;(load "ui.el")
+;;
+;;;; These customizations make editing a bit nicer.
+;;(load "editing.el")
+;;
+;;;; Hard-to-categorize customizations
+;;(load "misc.el")
+;;
+;;;; For editing lisps
+;;(load "elisp-editing.el")
+;;
+;;;; Langauage-specific
+;;(load "setup-clojure.el")
+;;(load "setup-js.el")
+;;
+;;
+;;;; enable mac mode
+;;(setq mac-command-modifier 'alt 
+;;      mac-option-modifier 'meta
+;;      ns-right-alternate-modifier nil)
+;;(mac-key-mode 1)
+;;
+;;;; enable auto-complete
+;;(ac-config-default)
+;;(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+;; '(package-selected-packages (quote (exec-path-from-shell))))
+;;(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+;; )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (cider exec-path-from-shell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
