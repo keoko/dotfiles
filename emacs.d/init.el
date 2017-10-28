@@ -1,14 +1,17 @@
-;; TODO - check https://github.com/manuel-uberti/.emacs.d
-;; TODO - check emacs-live
 ;; TODO - autocomplete
 ;; TODO - helm notes
 ;; TODO - theme
 ;; TODO - multicursor
-;; TODO - install cider
 ;; TODO - install clojurescript
-;; TODO - install clojure
+;; TODO - install magit
 ;; TODO - pretify XML, json files
 ;; TODO - rebin top line, bottom line
+;; TODO - move shortcuts
+;; TODO - check https://github.com/manuel-uberti/.emacs.d
+;; TODO - check emacs-live
+;; TODO - paredit in nrepl
+;; TODO - check batsov video on cider
+;; TODO - open init.el with a shortcut
 
 ;; disable menu bar, scroll bar and tool bar
 (menu-bar-mode -1)
@@ -54,10 +57,10 @@
 
     ;; key bindings and code colorization for Clojure
     ;; https://github.com/clojure-emacs/clojure-mode
-    ;; clojure-mode
+    clojure-mode
 
     ;; extra syntax highlighting for clojure
-    ;; clojure-mode-extra-font-locking
+    clojure-mode-extra-font-locking
 
     ;; integration with a Clojure REPL
     ;; https://github.com/clojure-emacs/cider
@@ -176,18 +179,7 @@ my-packages
 ;;
 ;;;; enable auto-complete
 ;;(ac-config-default)
-;;(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-;; '(package-selected-packages (quote (exec-path-from-shell))))
-;;(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-;; )
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -202,4 +194,9 @@ my-packages
  )
 
 
+;;;;
+;; Cider
+;;;;
+
+;; lein command
 (setq cider-lein-command "/Users/icabrebarrera/bin/lein")

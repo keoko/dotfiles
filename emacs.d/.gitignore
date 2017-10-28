@@ -3,3 +3,4 @@ backup/
 ac-comphist.dat
 elpa/
 eshell/
+cider-history
