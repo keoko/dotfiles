@@ -1,22 +1,31 @@
-;; TODO - autocomplete
-;; TODO - helm notes
-;; TODO - theme
-;; TODO - multicursor
-;; TODO - install clojurescript
-;; TODO - install magit
-;; TODO - pretify XML, json files
-;; TODO - rebin top line, bottom line
-;; TODO - move shortcuts
-;; TODO - check https://github.com/manuel-uberti/.emacs.d
-;; TODO - check emacs-live
-;; TODO - paredit in nrepl
-;; TODO - check batsov video on cider
-;; TODO - open init.el with a shortcut
+;;; init.el --- Keoko's Emacs configuration
 
 ;; disable menu bar, scroll bar and tool bar
 (menu-bar-mode -1)
 (toggle-scroll-bar -1)
 (tool-bar-mode -1)
+
+;; disable startup screen
+(setq inhibit-startup-screen t)
+
+;; the blinking cursor is nothing, but an annoyance
+(blink-cursor-mode -1)
+
+;; disable the annoying bell ring
+(setq ring-bell-function 'ignore)
+
+;; mode line settings
+(line-number-mode t)
+(column-number-mode t)
+(size-indication-mode t)
+
+;; enable y/n answers
+(fset 'yes-or-no-p 'y-or-n-p)
+
+; nice scrolling
+(setq scroll-margin 0
+      scroll-conservatively 100000
+      scroll-preserve-screen-position 1)
 
 ;; start server
 (server-start)
@@ -180,6 +189,25 @@ my-packages
 ;;;; enable auto-complete
 ;;(ac-config-default)
 
+;;;;
+;; Clojure
+;;;;
+
+;; Enable paredit for Clojure
+(add-hook 'clojure-mode-hook 'enable-paredit-mode)
+
+
+;;;;
+;; Cider
+;;;;
+
+;; lein command
+(setq cider-lein-command "/Users/icabrebarrera/bin/lein")
+(setq cider-cljs-lein-repl
+      "(do (require 'figwheel-sidecar.repl-api)
+           (figwheel-sidecar.repl-api/start-figwheel!)
+           (figwheel-sidecar.repl-api/cljs-repl))")
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -193,10 +221,4 @@ my-packages
  ;; If there is more than one, they won't work right.
  )
 
-
-;;;;
-;; Cider
-;;;;
-
-;; lein command
-(setq cider-lein-command "/Users/icabrebarrera/bin/lein")
+;;; init.el ends here
