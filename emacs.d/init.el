@@ -60,6 +60,18 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
+(require 'use-package)
+(setq use-package-verbose t)
+
+(use-package zenburn-theme
+  :ensure t
+  :config
+(load-theme 'zenburn t))
+
+
 (defvar my-packages
   '(;; cheatsheet: http://www.emacswiki.org/emacs/PareditCheatsheet
     paredit
@@ -213,7 +225,9 @@ my-packages
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (cider exec-path-from-shell))))
+ '(package-selected-packages
+   (quote
+    (zenburn-theme use-package cider exec-path-from-shell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
