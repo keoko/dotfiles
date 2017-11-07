@@ -90,10 +90,49 @@
 
 (use-package which-key
   :ensure t
+  :init (which-key-mode 1)
+  :diminish (which-key-mode . " Ꙍ")
   :config
-  (which-key-mode +1))
+  (which-key-setup-side-window-right-bottom)
+  (setq which-key-sort-order 'which-key-key-order-alpha
+        which-key-side-window-max-width 0.33
+        which-key-idle-delay 0.7)
+  )
 
-(use-package projectile
+(use-package ivy
+  :ensure t
+  :diminish (ivy-mode . "") ; does not display ivy in the modeline
+  :init (ivy-mode 1)        ; enable ivy globally at startup
+  :bind (:map ivy-mode-map  ; bind in the ivy buffer
+         ("C-'" . ivy-avy)) ; C-' to ivy-avy
+  :config
+  (setq ivy-use-virtual-buffers t)   ; extend searching to bookmarks and …
+  (setq ivy-height 20)               ; set height of the ivy window
+  (setq ivy-display-style 'fancy)
+  (setq ivy-count-format "(%d/%d) ") ; count format, from the ivy help page
+  )
+
+(use-package counsel
+  :ensure t
+  :bind*                           ; load counsel when pressed
+  (("M-x"     . counsel-M-x)       ; M-x use counsel
+   ("C-x C-f" . counsel-find-file) ; C-x C-f use counsel-find-file
+   ("C-x C-r" . counsel-recentf)   ; search recently edited files
+   ("C-c f"   . counsel-git)       ; search for files in git repo
+   ("C-c s"   . counsel-git-grep)  ; search for regexp in git repo
+   ("C-c /"   . counsel-ag)        ; search for regexp in git repo using ag
+   ("C-c l"   . counsel-locate))   ; search for files or else using locate
+  )
+
+(use-package swiper :ensure t
+  :bind* (("M-s" . swiper)
+          ("M-S" . swiper-all)
+          :map swiper-map
+          ("C-s" . ivy-previous-history-element)
+          ("C-t" . ivy-yank-word)))
+
+
+(use-package projctile
   :ensure t
   :bind ("s-p" . projectile-command-map)
   :config
@@ -138,6 +177,9 @@
       "(do (require 'figwheel-sidecar.repl-api)
            (figwheel-sidecar.repl-api/start-figwheel!)
            (figwheel-sidecar.repl-api/cljs-repl))")
+
+(use-package markdown-mode
+  :ensure t)
 
 
 ;; (defvar my-packages
@@ -222,7 +264,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell))))
+    (markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
