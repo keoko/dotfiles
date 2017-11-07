@@ -1,4 +1,4 @@
-;;; init.el --- Keoko's Emacs configuration
+;;; init.el --- keoko's emacs configuration
 
 ;; disable menu bar, scroll bar and tool bar
 (menu-bar-mode -1)
@@ -35,6 +35,9 @@
 ;; increase font
 (global-set-key (kbd "C-+") 'text-scale-increase)
 
+;; highlight the current line
+(global-hl-line-mode +1)
+
 ;; special chars in mac like @
 (setq-default mac-right-option-modifier nil)
 ;; alt/meta key for international keyboards
@@ -69,64 +72,118 @@
 (use-package zenburn-theme
   :ensure t
   :config
-(load-theme 'zenburn t))
+  (load-theme 'zenburn t))
+
+(use-package multiple-cursors
+  :ensure t)
+
+(use-package auto-complete
+  :ensure t
+  :init
+  (progn
+    (auto-complete-mode t))
+  :config
+  (progn 
+    (use-package auto-complete-config)
+    (ac-set-trigger-key "TAB")
+    (ac-config-default)))
+
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode +1))
+
+(use-package projectile
+  :ensure t
+  :bind ("s-p" . projectile-command-map)
+  :config
+  (projectile-global-mode +1))
+
+(use-package rainbow-delimiters
+  :ensure t)
+
+(use-package rainbow-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-mode))
+
+(use-package paredit
+  :ensure t
+  :config
+  (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
+  ;; enable in the *scratch* buffer
+  (add-hook 'lisp-interaction-mode-hook #'paredit-mode)
+  (add-hook 'ielm-mode-hook #'paredit-mode)
+  (add-hook 'lisp-mode-hook #'paredit-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'paredit-mode))
+
+(use-package clojure-mode
+  :ensure t
+  :config
+  (add-hook 'clojure-mode-hook #'paredit-mode)
+  (add-hook 'clojure-mode-hook #'subword-mode)
+  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
+
+(use-package cider
+  :ensure t
+  :config
+  (add-hook 'cider-mode-hook #'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook #'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook #'paredit-mode)
+;  (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
+  )
+
+(setq cider-lein-command "/Users/icabrebarrera/bin/lein")
+(setq cider-cljs-lein-repl
+      "(do (require 'figwheel-sidecar.repl-api)
+           (figwheel-sidecar.repl-api/start-figwheel!)
+           (figwheel-sidecar.repl-api/cljs-repl))")
 
 
-(defvar my-packages
-  '(;; cheatsheet: http://www.emacswiki.org/emacs/PareditCheatsheet
-    paredit
+;; (defvar my-packages
+;;   '(;; cheatsheet: http://www.emacswiki.org/emacs/PareditCheatsheet
 
-    ;; key bindings and code colorization for Clojure
-    ;; https://github.com/clojure-emacs/clojure-mode
-    clojure-mode
+;;     ;; extra syntax highlighting for clojure
+;;     clojure-mode-extra-font-locking
 
-    ;; extra syntax highlighting for clojure
-    clojure-mode-extra-font-locking
+;;     ;; allow ido usage in as many contexts as possible. see
+;;     ;; customizations/navigation.el line 23 for a description
+;;     ;; of ido
+;;     ;; ido-ubiquitous
 
-    ;; integration with a Clojure REPL
-    ;; https://github.com/clojure-emacs/cider
-    cider
+;;     ;; Enhances M-x to allow easier execution of commands. Provides
+;;     ;; a filterable list of possible commands in the minibuffer
+;;     ;; http://www.emacswiki.org/emacs/Smex
+;;     ;; smex
 
-    ;; allow ido usage in as many contexts as possible. see
-    ;; customizations/navigation.el line 23 for a description
-    ;; of ido
-    ;; ido-ubiquitous
+;;     ;; project navigation
+;;     ;; projectile
 
-    ;; Enhances M-x to allow easier execution of commands. Provides
-    ;; a filterable list of possible commands in the minibuffer
-    ;; http://www.emacswiki.org/emacs/Smex
-    ;; smex
+;;     ;; colorful parenthesis matching
+;;     ;; rainbow-delimiters
 
-    ;; project navigation
-    ;; projectile
+;;     ;; edit html tags like sexps
+;;     ;; tagedit
 
-    ;; colorful parenthesis matching
-    ;; rainbow-delimiters
+;;     ;; edit multiple lines at the same time
+;;     ;; multiple-cursors
 
-    ;; edit html tags like sexps
-    ;; tagedit
+;;     ;; git integration
+;;     ;; magit
 
-    ;; edit multiple lines at the same time
-    ;; multiple-cursors
+;;     ;; Mac shortcut binding
+;;     ;; mac-key-mode
+;;     ;; redo+
 
-    ;; git integration
-    ;; magit
+;;     ;; auto-complete
+;;     ;; auto-complete
 
-    ;; Mac shortcut binding
-    ;; mac-key-mode
-    ;; redo+
+;;     ;; clojure refactor
+;;     ;; clj-refactor
 
-    ;; auto-complete
-    ;; auto-complete
-
-    ;; clojure refactor
-    ;; clj-refactor
-
-    ;; helm
-    ;;helm
-    ))
-
-my-packages
+;;     ;; helm
+;;     ;;helm
+;;     ))
 
 ;; On OS X, an Emacs instance started from the graphical user
 ;; interface will have a different environment than a shell in a
@@ -139,9 +196,9 @@ my-packages
 ;;(if (eq system-type 'darwin)
 ;;    (add-to-list 'my-packages 'exec-path-from-shell))
 
-(dolist (p my-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
+;; (dolist (p my-packages)
+;;   (when (not (package-installed-p p))
+;;     (package-install p)))
 
 
 ;; Place downloaded elisp files in ~/.emacs.d/vendor. You'll then be able
@@ -158,68 +215,6 @@ my-packages
 (add-to-list 'load-path "~/.emacs.d/vendor")
 
 
-;;;;;;
-;;;; Customization
-;;;;;;
-;;
-;;;; Add a directory to our load path so that when you `load` things
-;;;; below, Emacs knows where to look for the corresponding file.
-;;(add-to-list 'load-path "~/.emacs.d/customizations")
-;;
-;;;; Sets up exec-path-from-shell so that Emacs will use the correct
-;;;; environment variables
-;;(load "shell-integration.el")
-;;
-;;;; These customizations make it easier for you to navigate files,
-;;;; switch buffers, and choose options from the minibuffer.
-;;(load "navigation.el")
-;;
-;;;; These customizations change the way emacs looks and disable/enable
-;;;; some user interface elements
-;;(load "ui.el")
-;;
-;;;; These customizations make editing a bit nicer.
-;;(load "editing.el")
-;;
-;;;; Hard-to-categorize customizations
-;;(load "misc.el")
-;;
-;;;; For editing lisps
-;;(load "elisp-editing.el")
-;;
-;;;; Langauage-specific
-;;(load "setup-clojure.el")
-;;(load "setup-js.el")
-;;
-;;
-;;;; enable mac mode
-;;(setq mac-command-modifier 'alt 
-;;      mac-option-modifier 'meta
-;;      ns-right-alternate-modifier nil)
-;;(mac-key-mode 1)
-;;
-;;;; enable auto-complete
-;;(ac-config-default)
-
-;;;;
-;; Clojure
-;;;;
-
-;; Enable paredit for Clojure
-(add-hook 'clojure-mode-hook 'enable-paredit-mode)
-
-
-;;;;
-;; Cider
-;;;;
-
-;; lein command
-(setq cider-lein-command "/Users/icabrebarrera/bin/lein")
-(setq cider-cljs-lein-repl
-      "(do (require 'figwheel-sidecar.repl-api)
-           (figwheel-sidecar.repl-api/start-figwheel!)
-           (figwheel-sidecar.repl-api/cljs-repl))")
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -227,7 +222,7 @@ my-packages
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (zenburn-theme use-package cider exec-path-from-shell))))
+    (which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
