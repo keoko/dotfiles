@@ -75,16 +75,16 @@
 (require 'use-package)
 (setq use-package-verbose t)
 
-(use-package zenburn-theme
 (use-package magit
   :ensure t
   :init
   (setq magit-diff-paint-whitespace t)
   (setq magit-diff-highlight-trailing t))
 
+(use-package solarized
   :ensure t
   :config
-  (load-theme 'zenburn t))
+  (load-theme 'solarized-light t))
 
 (use-package multiple-cursors
   :ensure t)
