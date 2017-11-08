@@ -42,6 +42,15 @@
 (global-set-key (kbd "C-+") 'text-scale-increase)
 ;; comment & uncomment code
 (define-key global-map [?\s--] 'comment-line)
+(define-key global-map [?\s-d] 'projectile-find-dir)
+;(define-key global-map [?\s-e] 'er/expand-region)
+(define-key global-map [?\s-f] 'projectile-find-file)
+(define-key global-map [?\s-g] 'projectile-grep)
+(define-key global-map [?\s-l] 'goto-line)
+(define-key global-map [?\s-m] 'magit-status)
+(define-key global-map [?\s-w] 'delete-frame)
+(define-key global-map [?\s-x] 'exchange-point-and-mark)
+(define-key global-map [?\s-p] 'projectile-switch-project)
 
 ;; open init.el shortcut
 (global-set-key (kbd "C-c e") 
