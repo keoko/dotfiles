@@ -76,6 +76,12 @@
 (setq use-package-verbose t)
 
 (use-package zenburn-theme
+(use-package magit
+  :ensure t
+  :init
+  (setq magit-diff-paint-whitespace t)
+  (setq magit-diff-highlight-trailing t))
+
   :ensure t
   :config
   (load-theme 'zenburn t))
