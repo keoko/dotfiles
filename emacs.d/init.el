@@ -27,6 +27,12 @@
       scroll-conservatively 100000
       scroll-preserve-screen-position 1)
 
+;; store all backup and autosave files in the tmp dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
 ;; start server
 (server-start)
 
