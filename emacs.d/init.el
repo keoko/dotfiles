@@ -144,7 +144,7 @@
           ("C-t" . ivy-yank-word)))
 
 
-(use-package projctile
+(use-package projectile
   :ensure t
   :bind ("s-p" . projectile-command-map)
   :config
