@@ -63,6 +63,11 @@
 (global-set-key (kbd "C-c c") 'org-capture)
 (setq org-default-notes-file "~/org/organizer.org")
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/org/organizer.org" "Tasks")
+             "* TODO %?\n")
+        ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
+             "* %?\nEntered on %U\n  %i\n  %a")))
 
 
 
