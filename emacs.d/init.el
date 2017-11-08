@@ -40,6 +40,8 @@
 (global-set-key (kbd "C--") 'text-scale-decrease)
 ;; increase font
 (global-set-key (kbd "C-+") 'text-scale-increase)
+;; comment & uncomment code
+(define-key global-map [?\s--] 'comment-line)
 
 ;; open init.el shortcut
 (global-set-key (kbd "C-c e") 
