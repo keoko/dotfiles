@@ -41,6 +41,13 @@
 ;; increase font
 (global-set-key (kbd "C-+") 'text-scale-increase)
 
+;; org-mode
+(global-set-key (kbd "C-c o") 
+                (lambda () (interactive) (find-file "~/org/organizer.org")))
+(global-set-key (kbd "C-c c") 'org-capture)
+(setq org-default-notes-file "~/org/organizer.org")
+(setq org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
+
 ;; highlight the current line
 (global-hl-line-mode +1)
 
