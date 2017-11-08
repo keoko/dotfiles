@@ -143,6 +143,10 @@
           ("C-s" . ivy-previous-history-element)
           ("C-t" . ivy-yank-word)))
 
+(use-package json-mode
+  :ensure t
+  :mode (("\\.json\\'" . json-mode))
+  :config (setq-default js-indent-level 2))
 
 (use-package projectile
   :ensure t
@@ -279,7 +283,7 @@
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" default)))
  '(package-selected-packages
    (quote
-    (magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell))))
+    (json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
