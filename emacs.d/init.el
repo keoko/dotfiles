@@ -136,6 +136,15 @@
         which-key-idle-delay 0.7)
   )
 
+(use-package ace-window
+  :bind* ("C-x o" . ace-window)
+  :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+
+(use-package avy
+  :ensure t
+  :bind (("C-c j" . avy-goto-word-or-subword-1)
+	 ("s-." . avy-goto-word-or-subword-1)))
+
 (use-package ivy
   :ensure t
   :diminish (ivy-mode . "") ; does not display ivy in the modeline
@@ -308,7 +317,7 @@
  '(org-agenda-files (quote ("~/org/organizer.org")))
  '(package-selected-packages
    (quote
-    (solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell))))
+    (ace-window avy solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
