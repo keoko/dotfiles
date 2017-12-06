@@ -93,6 +93,9 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
 
+;(defvar elpa-melpa-stable '("melpa-stable" . "http://stable.melpa.org/packages/"))
+;(add-to-list 'package-archives elpa-melpa-stable t)
+
 ;; sets the load path
 (package-initialize)
 
@@ -105,13 +108,14 @@
 (require 'use-package)
 (setq use-package-verbose t)
 
+
 (use-package magit
   :ensure t
   :init
   (setq magit-diff-paint-whitespace t)
   (setq magit-diff-highlight-trailing t))
 
-(use-package solarized
+(use-package solarized-theme
   :ensure t
   :config
   (load-theme 'solarized-light t))
@@ -142,6 +146,7 @@
   )
 
 (use-package ace-window
+  :ensure t
   :bind* ("C-x o" . ace-window)
   :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
@@ -217,6 +222,17 @@
   (add-hook 'clojure-mode-hook #'paredit-mode)
   (add-hook 'clojure-mode-hook #'subword-mode)
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
+
+(use-package clj-refactor
+  :ensure t
+  :init
+  (defun enable-clj-refactor-mode ()
+    (clj-refactor-mode 1)
+    (cljr-add-keybindings-with-prefix "C-c C-R"))
+  (add-hook 'clojure-mode-hook 'enable-clj-refactor-mode)
+  ;; Don't use prefix notation when cleaning the ns form.
+  (setq cljr-favor-prefix-notation nil)
+  (setq cljr--debug-mode t))
 
 (use-package cider
   :ensure t
@@ -310,6 +326,8 @@
 ;; a .yml file
 (add-to-list 'load-path "~/.emacs.d/vendor")
 
+(add-to-list 'exec-path "/usr/local/bin")
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -322,7 +340,7 @@
  '(org-agenda-files (quote ("~/org/organizer.org")))
  '(package-selected-packages
    (quote
-    (ace-window avy solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell))))
+    (clj-refactor ace-window avy solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
