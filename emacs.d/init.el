@@ -1,4 +1,4 @@
-e;;; init.el --- keoko's emacs configuration
+;;; init.el --- keoko's emacs configuration
 
 ;; disable menu bar, scroll bar and tool bar
 (menu-bar-mode -1)
@@ -56,16 +56,10 @@ e;;; init.el --- keoko's emacs configuration
 (global-set-key (kbd "C-c e") 
                 (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 
+
 ;; org-mode
 (global-set-key (kbd "C-c o") 
                 (lambda () (interactive) (find-file "~/org/organizer.org")))
-
-;; org-mode
-(global-set-key (kbd "C-c u") 
-                (lambda () (interactive) (find-file "~/org/useful-commands.org")))
-
-
-;; org-mode
 (global-set-key (kbd "C-c c") 'org-capture)
 (setq org-default-notes-file "~/org/organizer.org")
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
@@ -187,8 +181,8 @@ e;;; init.el --- keoko's emacs configuration
   )
 
 (use-package swiper :ensure t
-  :bind* (("C-c C-s" . swiper)
-          ;;("M-S" . swiper-all)
+  :bind* (("M-s" . swiper)
+          ("M-S" . swiper-all)
           :map swiper-map
           ("C-s" . ivy-previous-history-element)
           ("C-t" . ivy-yank-word)))
@@ -250,7 +244,6 @@ e;;; init.el --- keoko's emacs configuration
 
   ;; Pretty print in the REPL.
   (setq cider-repl-use-pretty-printing t)
-  
   ;; Hide *nrepl-connection* and *nrepl-server* buffers from appearing
   ;; in some buffer switching commands like switch-to-buffer
   (setq nrepl-hide-special-buffers nil)
@@ -341,11 +334,6 @@ e;;; init.el --- keoko's emacs configuration
 
 (add-to-list 'exec-path "/usr/local/bin")
 
-(defun inconsolata ()
-  "Set the default font to Inconsolata."
-  (interactive)
-  (set-default-font "Inconsolata 14"))
-(inconsolata)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -367,6 +355,3 @@ e;;; init.el --- keoko's emacs configuration
  )
 
 ;;; init.el ends here
-(put 'erase-buffer 'disabled nil)
-
-
