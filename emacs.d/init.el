@@ -114,6 +114,8 @@
 (require 'use-package)
 (setq use-package-verbose t)
 
+(use-package xah-find
+  :ensure t)
 
 (use-package magit
   :ensure t
@@ -127,7 +129,11 @@
   (load-theme 'solarized-light t))
 
 (use-package multiple-cursors
-  :ensure t)
+  :ensure t
+  :bind (("C-c m c" . mc/edit-lines)
+         ("C-c m n" . mc/mark-next-like-this)
+         ("C-c m p" . mc/mark-previous-like-this)
+	 ("C-c m a" . mc/mark-all-like-this)))
 
 (use-package auto-complete
   :ensure t
@@ -248,7 +254,7 @@
   (add-hook 'cider-repl-mode-hook #'paredit-mode)
 ;;  (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
   ;; Pretty print in the REPL.
-  (setq cider-repl-use-pretty-printing t)
+  ;; (setq cider-repl-use-pretty-printing t)
   ;; Hide *nrepl-connection* and *nrepl-server* buffers from appearing
   ;; in some buffer switching commands like switch-to-buffer
   (setq nrepl-hide-special-buffers nil)
@@ -350,13 +356,19 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(cider-boot-parameters "cider repl -s wait")
  '(custom-safe-themes
    (quote
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" default)))
  '(org-agenda-files (quote ("~/org/organizer.org")))
  '(package-selected-packages
    (quote
-    (clj-refactor ace-window avy solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell))))
+    (xah-find clj-refactor ace-window avy solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell)))
+ '(safe-local-variable-values
+   (quote
+    ((cider-cljs-lein-repl . "(do (user/go) (user/cljs-repl))")
+     (cider-refresh-after-fn . "reloaded.repl/resume")
+     (cider-refresh-before-fn . "reloaded.repl/suspend")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
