@@ -22,6 +22,9 @@
 ;; enable y/n answers
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; replace highlighted text with what I type
+(delete-selection-mode 1)
+
 ; nice scrolling
 (setq scroll-margin 0
       scroll-conservatively 100000
@@ -35,6 +38,26 @@
 
 ;; start server
 (server-start)
+
+;; highlight the current line
+(global-hl-line-mode +1)
+
+;; special chars in mac like @
+(setq-default mac-right-option-modifier nil)
+;; alt/meta key for international keyboards
+;;(setq mac-option-modifier 'none)
+;;(setq mac-command-modifier 'meta)
+
+;; Invoke M-x without the Alt key
+;; https://sites.google.com/site/steveyegge2/effective-emacs
+(global-set-key "\C-x\C-m" 'execute-extended-command)
+(global-set-key "\C-c\C-m" 'execute-extended-command)
+
+;; Prefer backward-kill-word over Backspace
+;; https://sites.google.com/site/steveyegge2/effective-emacs
+(global-set-key "\C-w" 'backward-kill-word)
+(global-set-key "\C-x\C-k" 'kill-region)
+(global-set-key "\C-c\C-k" 'kill-region)
 
 ;; decrease font
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -67,24 +90,56 @@
 
 ;; org-mode
 (global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c a") 'org-agenda)
 (setq org-default-notes-file "~/org/organizer.org")
-(setq org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
+(setq org-agenda-files '("~/org/organizer.org"
+                         "~/org/work.org"
+                         "~/org/clojure.org"
+			 "~/org/emacs.org"))
+(setq org-refile-targets '(("~/org/organizer.org" :maxlevel . 1)
+                         ("~/org/work.org" :maxlevel . 1)
+                         ("~/org/clojure.org" :maxlevel . 1)
+			 ("~/org/emacs.org" :maxlevel . 1)
+			 ("~/org/projects.org" :maxlevel . 2)			 
+			 ("~/org/someday.org" :level . 1)))
+
+
+
+;;(setq org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/org/organizer.org" "Tasks")
              "* TODO %?\n")
         ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
-             "* %?\nEntered on %U\n  %i\n  %a")))
+         "* %?\nEntered on %U\n  %i\n  %a")))
+(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELLED(c)")))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; org-mode agenda options                                                ;;
+;; from http://pragmaticemacs.com/page/11/                                ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-;; highlight the current line
-(global-hl-line-mode +1)
-
-;; special chars in mac like @
-(setq-default mac-right-option-modifier nil)
-;; alt/meta key for international keyboards
-;;(setq mac-option-modifier 'none)
-;;(setq mac-command-modifier 'meta)
+;;open agenda in current window
+(setq org-agenda-window-setup (quote current-window))
+;;warn me of any deadlines in next 7 days
+(setq org-deadline-warning-days 7)
+;;show me tasks scheduled or due in next fortnight
+(setq org-agenda-span (quote fortnight))
+;;don't show tasks as scheduled if they are already shown as a deadline
+(setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+;;don't give awarning colour to tasks with impending deadlines
+;;if they are scheduled to be done
+(setq org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
+;;don't show tasks that are scheduled or have deadlines in the
+;;normal todo list
+(setq org-agenda-todo-ignore-deadlines (quote all))
+(setq org-agenda-todo-ignore-scheduled (quote all))
+;;sort tasks in order of when they are due and then by priority
+(setq org-agenda-sorting-strategy
+  (quote
+   ((agenda deadline-up priority-down)
+    (todo priority-down category-keep)
+    (tags priority-down category-keep)
+    (search category-keep))))
 
 
 ;;;;
@@ -193,11 +248,18 @@
   )
 
 (use-package swiper :ensure t
-  :bind* (("C-c C-s" . swiper)
+  :bind* (("C-s" . swiper)
           ;;("M-S" . swiper-all)
           :map swiper-map
           ("C-s" . ivy-previous-history-element)
           ("C-t" . ivy-yank-word)))
+
+
+(use-package undo-tree
+  :ensure t
+  :init
+  (global-undo-tree-mode))
+
 
 (use-package json-mode
   :ensure t
@@ -266,8 +328,40 @@
            (figwheel-sidecar.repl-api/start-figwheel!)
            (figwheel-sidecar.repl-api/cljs-repl))")
 
+
+;; see https://discuss.ocaml.org/t/using-emacs-for-ocaml-development/726/2
+(and (require 'cl)
+     (use-package tuareg
+       :ensure t
+       :config
+       (add-hook 'tuareg-mode-hook #'electric-pair-local-mode)
+       ;; (add-hook 'tuareg-mode-hook 'tuareg-imenu-set-imenu)
+       (setq auto-mode-alist
+             (append '(("\\.ml[ily]?$" . tuareg-mode)
+                       ("\\.topml$" . tuareg-mode))
+                     auto-mode-alist)))
+
+     ;; Merlin configuration
+
+     (use-package merlin
+       :ensure t
+       :config
+       (add-hook 'tuareg-mode-hook 'merlin-mode)
+       (add-hook 'merlin-mode-hook #'company-mode)
+       (setq merlin-error-after-save nil))
+     
+     ;; utop configuration
+
+     (use-package utop
+       :ensure t
+       :config
+       (autoload 'utop-minor-mode "utop" "Minor mode for utop" t)
+       (add-hook 'tuareg-mode-hook 'utop-minor-mode)))
+
 (use-package markdown-mode
-  :ensure t)
+  :ensure t
+  :config
+  (setq markdown-command "/usr/local/bin/pandoc"))
 
 
 ;; switch to previous buffer
@@ -360,7 +454,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (defun inconsolata ()
   "Set the default font to Inconsolata."
   (interactive)
-  (set-default-font "Inconsolata 14"))
+  (set-default-font "Inconsolata 16"))
 (inconsolata)
 
 (custom-set-variables
@@ -372,10 +466,9 @@ Repeated invocations toggle between the two most recently open buffers."
  '(custom-safe-themes
    (quote
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" default)))
- '(org-agenda-files (quote ("~/org/organizer.org")))
  '(package-selected-packages
    (quote
-    (xah-find clj-refactor ace-window avy solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell)))
+    (undo-tree utop merlin tuareg xah-find clj-refactor ace-window avy solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell)))
  '(safe-local-variable-values
    (quote
     ((cider-cljs-lein-repl . "(do (user/go) (user/cljs-repl))")
@@ -389,3 +482,5 @@ Repeated invocations toggle between the two most recently open buffers."
  )
 
 ;;; init.el ends here
+(put 'narrow-to-page 'disabled nil)
+(put 'erase-buffer 'disabled nil)
