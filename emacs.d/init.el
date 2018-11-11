@@ -40,7 +40,7 @@
 (server-start)
 
 ;; highlight the current line
-(global-hl-line-mode +1)
+;;(global-hl-line-mode +1)
 
 ;; special chars in mac like @
 (setq-default mac-right-option-modifier nil)
@@ -65,6 +65,7 @@
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key "\C-c\C-k" 'kill-region)
+
 
 ;; decrease font
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -181,6 +182,12 @@
 
 (use-package xah-find
   :ensure t)
+
+(use-package easy-kill
+  :ensure t
+  :config
+  (global-set-key [remap kill-ring-save] #'easy-kill)
+  (global-set-key [remap mark-sexp] #'easy-mark))
 
 (use-package magit
   :ensure t
@@ -483,7 +490,7 @@ Repeated invocations toggle between the two most recently open buffers."
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" default)))
  '(package-selected-packages
    (quote
-    (undo-tree utop merlin tuareg xah-find clj-refactor ace-window avy solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell)))
+    (easy-kill undo-tree utop merlin tuareg xah-find clj-refactor ace-window avy solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell)))
  '(safe-local-variable-values
    (quote
     ((cider-cljs-lein-repl . "(do (user/go) (user/cljs-repl))")))))
