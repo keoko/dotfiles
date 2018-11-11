@@ -53,6 +53,13 @@
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
 
+
+;; https://sites.google.com/site/steveyegge2/effective-emacs
+(defalias 'qrr 'query-replace-regexp)
+
+;; (global-set-key [f5] 'call-last-kbd-macro)
+(define-key global-map [?\s-0] 'call-last-kbd-macro)
+
 ;; Prefer backward-kill-word over Backspace
 ;; https://sites.google.com/site/steveyegge2/effective-emacs
 (global-set-key "\C-w" 'backward-kill-word)
@@ -74,6 +81,9 @@
 (define-key global-map [?\s-w] 'delete-frame)
 (define-key global-map [?\s-x] 'exchange-point-and-mark)
 (define-key global-map [?\s-p] 'projectile-switch-project)
+(define-key global-map [?\s-s] 'swiper)
+
+
 
 ;; open init.el shortcut
 (global-set-key (kbd "C-c e") 
@@ -248,7 +258,7 @@
   )
 
 (use-package swiper :ensure t
-  :bind* (("C-s" . swiper)
+  :bind* (;;("?\s-s" . swiper)
           ;;("M-S" . swiper-all)
           :map swiper-map
           ("C-s" . ivy-previous-history-element)
@@ -320,7 +330,12 @@
   ;; Hide *nrepl-connection* and *nrepl-server* buffers from appearing
   ;; in some buffer switching commands like switch-to-buffer
   (setq nrepl-hide-special-buffers nil)
-  )
+  ;; integrant-repl
+  (setq cider-ns-refresh-before-fn "integrant.repl/suspend"
+	cider-ns-refresh-after-fn "integrant.repl/resume"))
+
+(global-set-key "\C-c\C-r\C-r" 'cider-refresh)
+
 
 (setq cider-lein-command "/Users/icabrebarrera/bin/lein")
 (setq cider-cljs-lein-repl
@@ -471,9 +486,7 @@ Repeated invocations toggle between the two most recently open buffers."
     (undo-tree utop merlin tuareg xah-find clj-refactor ace-window avy solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell)))
  '(safe-local-variable-values
    (quote
-    ((cider-cljs-lein-repl . "(do (user/go) (user/cljs-repl))")
-     (cider-refresh-after-fn . "reloaded.repl/resume")
-     (cider-refresh-before-fn . "reloaded.repl/suspend")))))
+    ((cider-cljs-lein-repl . "(do (user/go) (user/cljs-repl))")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -484,3 +497,4 @@ Repeated invocations toggle between the two most recently open buffers."
 ;;; init.el ends here
 (put 'narrow-to-page 'disabled nil)
 (put 'erase-buffer 'disabled nil)
+(put 'upcase-region 'disabled nil)
