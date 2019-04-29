@@ -11,6 +11,9 @@
 ;; the blinking cursor is nothing, but an annoyance
 (blink-cursor-mode -1)
 
+;; line number
+(setq linum-format "%4d")
+
 ;; disable the annoying bell ring
 (setq ring-bell-function 'ignore)
 
@@ -37,10 +40,13 @@
       `((".*" ,temporary-file-directory t)))
 
 ;; start server
-(server-start)
+;; (server-start)
 
 ;; highlight the current line
 ;;(global-hl-line-mode +1)
+
+
+(show-paren-mode)
 
 ;; special chars in mac like @
 (setq-default mac-right-option-modifier nil)
@@ -52,6 +58,8 @@
 ;; https://sites.google.com/site/steveyegge2/effective-emacs
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
+
+
 
 
 ;; https://sites.google.com/site/steveyegge2/effective-emacs
@@ -180,6 +188,26 @@
 (require 'use-package)
 (setq use-package-verbose t)
 
+;; see https://sam217pa.github.io/2016/09/02/how-to-build-your-own-spacemacs/
+;; https://github.com/noctuid/evil-guide
+;; see http://makble.com/how-to-toggle-evil-mode-in-emacs in how to toogle evil and non-evil mode
+;; load evil
+(use-package evil
+  :ensure t ;; install the evil package if not installed
+  :init	    ;; tweak evil's configuration before loading it
+  (setq evil-search-module 'evil-search)
+  (setq evil-ex-complete-emacs-commands nil)
+  (setq evil-vsplit-window-right t)
+  (setq evil-split-window-below t)
+  (setq evil-shift-round nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-move-beyond-eol nil)
+  :config ;; tweak evil after loading it
+  (evil-mode))
+
+  ;; example how to map a command in normal mode (called 'normal state' in evil)
+;;  (define-key evil-normal-state-map (kbd ", w") 'evil-window-vsplit))
+
 (use-package xah-find
   :ensure t)
 
@@ -195,10 +223,21 @@
   (setq magit-diff-paint-whitespace t)
   (setq magit-diff-highlight-trailing t))
 
-(use-package solarized-theme
+;; (use-package solarized-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'solarized-light t))
+
+(use-package cyberpunk-theme
+  :if (window-system)
   :ensure t
-  :config
-  (load-theme 'solarized-light t))
+  :init
+  (progn
+    (load-theme 'cyberpunk t)
+    (set-face-attribute `mode-line nil
+                        :box nil)
+    (set-face-attribute `mode-line-inactive nil
+                        :box nil)))
 
 (use-package multiple-cursors
   :ensure t
@@ -341,8 +380,10 @@
   (setq cider-ns-refresh-before-fn "integrant.repl/suspend"
 	cider-ns-refresh-after-fn "integrant.repl/resume"))
 
-(global-set-key "\C-c\C-r\C-r" 'cider-refresh)
+(use-package flycheck-joker
+  :ensure t)
 
+(global-set-key "\C-c\C-r\C-r" 'cider-refresh)
 
 (setq cider-lein-command "/Users/icabrebarrera/bin/lein")
 (setq cider-cljs-lein-repl
@@ -350,6 +391,16 @@
            (figwheel-sidecar.repl-api/start-figwheel!)
            (figwheel-sidecar.repl-api/cljs-repl))")
 
+(use-package eyebrowse
+  :ensure t
+  :diminish eyebrowse-mode
+  :config
+  (define-key eyebrowse-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
+  (define-key eyebrowse-mode-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
+  (define-key eyebrowse-mode-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
+  (define-key eyebrowse-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
+  (eyebrowse-mode t)
+  (setq eyebrowse-new-workspace t))
 
 ;; see https://discuss.ocaml.org/t/using-emacs-for-ocaml-development/726/2
 (and (require 'cl)
@@ -479,6 +530,38 @@ Repeated invocations toggle between the two most recently open buffers."
   (set-default-font "Inconsolata 16"))
 (inconsolata)
 
+
+(defun replace-buffer-string (old-string new-string)
+  (goto-char (point-min))
+  (while (search-forward old-string nil t)
+    (replace-match new-string nil t)))
+
+
+;; todo - improvement escape single quotes
+(defun comma-separated-query-list ()
+  "prepares comma separated list of elements"
+
+  (interactive)
+  (save-excursion
+    (replace-buffer-string "'" "''")
+    (let* ((lines (split-string (buffer-string) "\n" t))
+	   (items (mapconcat (lambda (l) (concat "'" l "'")) lines ",\n")))
+      (kill-region 1 (point-max))
+      (insert items))))
+
+(global-set-key "\C-c\C-l" 'comma-separated-query-list)
+
+(defun clj-strings ()
+  "prepares list of clj string"
+
+  (interactive)
+  (save-excursion
+    (replace-buffer-string "\"" "\\\"")
+    (let* ((lines (split-string (buffer-string) "\n" t))
+	   (items (mapconcat (lambda (l) (concat "\"" l "\"")) lines "\n")))
+      (kill-region 1 (point-max))
+      (insert items))))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -487,10 +570,10 @@ Repeated invocations toggle between the two most recently open buffers."
  '(cider-boot-parameters "cider repl -s wait")
  '(custom-safe-themes
    (quote
-    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" default)))
+    ("59e82a683db7129c0142b4b5a35dbbeaf8e01a4b81588f8c163bd255b76f4d21" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" default)))
  '(package-selected-packages
    (quote
-    (easy-kill undo-tree utop merlin tuareg xah-find clj-refactor ace-window avy solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell)))
+    (eyebrowse t+ cyberpunk-theme evil flycheck-joker rust-mode easy-kill undo-tree utop merlin tuareg xah-find clj-refactor ace-window avy solarized json-mode magit material-theme solarized-theme markdown-mode ivy counsel which-key multiple-cursors rainbow-mode rainbow-delimiters projectile zenburn-theme use-package cider exec-path-from-shell)))
  '(safe-local-variable-values
    (quote
     ((cider-cljs-lein-repl . "(do (user/go) (user/cljs-repl))")))))
